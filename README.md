@@ -11,3 +11,8 @@ A comparison of TensorFlow vs. PyTorch with classification on MNIST.
 2. torchvision
 3. numpy
 4. opencv
+
+### Reference List:
+
+1. https://pytorch.org/tutorials/beginner/data_loading_tutorial.html
+2. https://www.tensorflow.org/tutorials/quickstart/advanced
