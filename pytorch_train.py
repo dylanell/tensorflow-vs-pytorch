@@ -7,6 +7,7 @@ import torch
 from torchvision.transforms import transforms
 from util.pytorch_dataset import image_dataset
 from util.data_helpers import generate_lists_from_image_dataset
+from model.pytorch_classifier import Classifier
 
 def main():
     # parse command line arguments
@@ -60,13 +61,21 @@ def main():
         num_workers=args.num_workers
     )
 
+    # initialize the model
+    model = Classifier(1, 10)
+
     # get first batch and exit
     for i, batch in enumerate(train_loader):
-        img_batch = batch['image']
+        input_batch = batch['image']
         label_batch = batch['label']
 
+        # compute output batch 
+        output_batch = model(input_batch)
+
         print(label_batch)
-        print(img_batch.shape)
-        exit()
+        print(input_batch.shape)
+        print(output_batch.shape)
+        break
+
 if __name__ == '__main__':
     main()
