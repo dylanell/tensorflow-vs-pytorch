@@ -5,6 +5,7 @@ Script to train a CNN or FCNN classifier with PyTorch.
 import argparse
 import torch
 from torchvision.transforms import transforms
+import torch.nn.functional as F
 from util.pytorch_dataset import image_dataset
 from util.data_helpers import generate_lists_from_image_dataset
 from model.pytorch_classifier import Classifier
@@ -16,7 +17,11 @@ def main():
     parser.add_argument("--batch_size", type=int, default=32)
     parser.add_argument("--learn_rate", type=float, default=1e-3)
     parser.add_argument("--num_workers", type=int, default=1, help="Number of dataloader threads.")
+    parser.add_argument("--num_epochs", type=int, default=5, help="Number of epochs to train.")
     args = parser.parse_args()
+
+    # training device - try to find a gpu, if not just use cpu
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
     # generate filenames/labels lists from image data directory
     data_lists = generate_lists_from_image_dataset(args.data_dir)
@@ -64,18 +69,42 @@ def main():
     # initialize the model
     model = Classifier(1, 10)
 
-    # get first batch and exit
-    for i, batch in enumerate(train_loader):
-        input_batch = batch['image']
-        label_batch = batch['label']
+    # initialize an optimizer
+    optimizer = torch.optim.Adam(model.parameters(), lr=args.learn_rate)
 
-        # compute output batch 
-        output_batch = model(input_batch)
+    # move the model to the training device
+    model.to(device)
 
-        print(label_batch)
-        print(input_batch.shape)
-        print(output_batch.shape)
-        break
+    # train through all epochs
+    for e in range(args.num_epochs):
+        # loss accumulator for epoch
+        epoch_loss = 0.0
+
+        # get first batch and exit
+        for i, batch in enumerate(train_loader):
+            # parse batch and move to training device
+            input_batch = batch['image'].to(device)
+            label_batch = batch['label'].to(device)
+
+            # compute output batch
+            logits_batch = model(input_batch)
+
+            # compute cross entropy loss (assumes raw logits as model output)
+            loss = F.cross_entropy(logits_batch, label_batch)
+
+            # add loss to loss accumulator
+            epoch_loss += loss.item()
+
+            # zero out gradient attributes for all trainabe params
+            optimizer.zero_grad()
+
+            # compute gradients w.r.t loss (repopulates gradient attribute for all trainable params)
+            loss.backward()
+
+            # update params with current gradients
+            optimizer.step()
+
+        print('[INFO]: epoch: {:4.2f}, Loss: {:2.2f}'.format(e+1, epoch_loss/i))
 
 if __name__ == '__main__':
     main()
