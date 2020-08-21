@@ -4,9 +4,6 @@ Reference: https://pytorch.org/tutorials/beginner/data_loading_tutorial.html
 """
 
 import torch
-import pandas as pd
-import cv2
-import numpy as np
 from PIL import Image
 
 class image_dataset(torch.utils.data.Dataset):
