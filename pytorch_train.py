@@ -104,7 +104,7 @@ def main():
             # update params with current gradients
             optimizer.step()
 
-        print('[INFO]: epoch: {:4.2f}, Loss: {:2.2f}'.format(e+1, epoch_loss/i))
+        print('[INFO]: epoch: {:d}, Loss: {:.2f}'.format(e+1, epoch_loss/i))
 
 if __name__ == '__main__':
     main()
