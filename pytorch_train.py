@@ -28,6 +28,9 @@ def main():
     # generate filenames/labels df from image data directory
     data_dict = generate_df_from_image_dataset(args.data_dir)
 
+    # get number of classes in labels
+    num_class = data_dict['train']['Label'].nunique()
+
     # define the transform chain to process each sample as it is passed to a batch
     #   1. resize the sample (image) to 32x32 (h, w)
     #   2. convert resized sample to Pytorch tensor
@@ -67,7 +70,7 @@ def main():
     )
 
     # initialize the model
-    model = Classifier(1, 10)
+    model = Classifier(1, num_class)
 
     # initialize an optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learn_rate)
