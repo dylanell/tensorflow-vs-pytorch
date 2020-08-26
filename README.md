@@ -25,5 +25,6 @@ A comparison of TensorFlow vs. PyTorch with classification on MNIST.
 
 ### TODO:
 
-1. Refactor PyTorch dataset class to provide a PyTorch dataloader.
-2. Refactor TensorFlow dataset class to provide a TensorFlow iterator
+1. Update README to explain format of image dataset.
+2. Refactor PyTorch dataset class to provide a PyTorch dataloader.
+3. Refactor TensorFlow dataset class to provide a TensorFlow iterator
