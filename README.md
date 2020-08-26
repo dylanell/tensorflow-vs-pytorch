@@ -20,5 +20,10 @@ A comparison of TensorFlow vs. PyTorch with classification on MNIST.
 2. TensoFlow Training
   * https://www.tensorflow.org/tutorials/quickstart/advanced
 3. TensorFlow Datasets:
-  * https://www.tensorflow.org/guide/data
-  * https://www.tensorflow.org/datasets/add_dataset
+  * https://www.tensorflow.org/api_docs/python/tf/data/Dataset
+  * https://www.tensorflow.org/tutorials/load_data/images#using_tfdata_for_finer_control
+
+### TODO:
+
+1. Refactor PyTorch dataset class to provide a PyTorch dataloader.
+2. Refactor TensorFlow dataset class to provide a TensorFlow iterator
