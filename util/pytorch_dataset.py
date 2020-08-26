@@ -1,13 +1,13 @@
 """
 PyTorch dataset classes.
-Reference: https://pytorch.org/tutorials/beginner/data_loading_tutorial.html
+Reference:
+    https://pytorch.org/tutorials/beginner/data_loading_tutorial.html
 """
 
-import pandas as pd
 import torch
 from PIL import Image
 
-class image_dataset(torch.utils.data.Dataset):
+class ImageDataset(torch.utils.data.Dataset):
     """
     Make a PyTorch dataset from a dataframe of image files and labels.
     """
@@ -34,7 +34,7 @@ class image_dataset(torch.utils.data.Dataset):
 
         return data
 
-class raw_dataset(torch.utils.data.Dataset):
+class RawDataset(torch.utils.data.Dataset):
     """
     Make a Pytorch dataset from provided samples and labels.
     """

@@ -6,7 +6,7 @@ import argparse
 import torch
 from torchvision.transforms import transforms
 import torch.nn.functional as F
-from util.pytorch_dataset import image_dataset
+from util.pytorch_dataset import ImageDataset
 from util.data_helpers import generate_df_from_image_dataset
 from model.pytorch_classifier import Classifier
 
@@ -39,13 +39,13 @@ def main():
     ])
 
     # create train dataset
-    train_set = image_dataset(
+    train_set = ImageDataset(
         data_dict['train'],
         transform=transform
     )
 
     # create test dataset
-    test_set = image_dataset(
+    test_set = ImageDataset(
         data_dict['test'],
         transform=transform
     )
