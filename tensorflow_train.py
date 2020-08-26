@@ -5,6 +5,7 @@ Script to train a CNN or FCNN classifier with TensorFlow.
 import argparse
 import tensorflow as tf
 from util.data_helpers import generate_df_from_image_dataset
+from model.tensorflow_classifier import Classifier
 
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
@@ -31,7 +32,7 @@ def configure_dataset(dataset, batch_size):
 
     # set dataset to prefetch elements for better feed performance
     dataset = dataset.prefetch(buffer_size=AUTOTUNE)
-    
+
     return dataset
 
 def main():
@@ -46,6 +47,9 @@ def main():
 
     # generate filenames/labels df from image data directory
     data_dict = generate_df_from_image_dataset(args.data_dir)
+
+    # get number of classes in labels
+    num_class = data_dict['train']['Label'].nunique()
 
     # create train set from (file, label) tensor slices
     train_set = tf.data.Dataset.from_tensor_slices((
@@ -77,8 +81,8 @@ def main():
     # configure train set for performance
     test_set = configure_dataset(test_set, args.batch_size)
 
-    print(train_set)
-    print(test_set)
+    # initialize model
+    model = Classifier(10)
 
 if __name__ == '__main__':
     main()
