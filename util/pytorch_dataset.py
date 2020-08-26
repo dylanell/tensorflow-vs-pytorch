@@ -59,4 +59,4 @@ class RawDataset(torch.utils.data.Dataset):
         # get sample and label by idx
         data = {'sample': sample, 'label': label}
 
-        return pack
+        return data
