@@ -7,7 +7,7 @@ import torch
 from torchvision.transforms import transforms
 import torch.nn.functional as F
 from util.pytorch_dataset import image_dataset
-from util.data_helpers import generate_lists_from_image_dataset
+from util.data_helpers import generate_df_from_image_dataset
 from model.pytorch_classifier import Classifier
 
 def main():
@@ -23,8 +23,10 @@ def main():
     # training device - try to find a gpu, if not just use cpu
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
-    # generate filenames/labels lists from image data directory
-    data_lists = generate_lists_from_image_dataset(args.data_dir)
+    print('[INFO]: using \'{}\' device'.format(device))
+
+    # generate filenames/labels df from image data directory
+    data_dict = generate_df_from_image_dataset(args.data_dir)
 
     # define the transform chain to process each sample as it is passed to a batch
     #   1. resize the sample (image) to 32x32 (h, w)
@@ -38,16 +40,14 @@ def main():
 
     # create train dataset
     train_set = image_dataset(
-        data_lists['train_files'],
-        data_lists['train_labels'],
-        transform=transform,
+        data_dict['train'],
+        transform=transform
     )
 
     # create test dataset
     test_set = image_dataset(
-        data_lists['test_files'],
-        data_lists['test_labels'],
-        transform=transform,
+        data_dict['test'],
+        transform=transform
     )
 
     # create train dataloader
@@ -74,6 +74,8 @@ def main():
 
     # move the model to the training device
     model.to(device)
+
+    print('[INFO]: training...')
 
     # train through all epochs
     for e in range(args.num_epochs):
