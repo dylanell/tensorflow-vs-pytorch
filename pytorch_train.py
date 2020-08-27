@@ -82,11 +82,11 @@ def main():
 
     # train through all epochs
     for e in range(args.num_epochs):
-        # reset epoch loss accumulator
-        epoch_loss = 0.0
-
-        # reset epoch number correct accumulator
-        num_correct = 0
+        # reset accumulators
+        train_epoch_loss = 0.0
+        train_num_correct = 0
+        test_epoch_loss = 0.0
+        test_num_correct = 0
 
         # run through epoch of train data
         for i, batch in enumerate(train_loader):
@@ -104,29 +104,19 @@ def main():
             # zero out gradient attributes for all trainabe params
             optimizer.zero_grad()
 
-            # compute gradients w.r.t loss (repopulates gradient attribute for all trainable params)
+            # compute gradients w.r.t loss (repopulate gradient attribute for all trainable params)
             loss.backward()
 
             # update params with current gradients
             optimizer.step()
 
             # accumulate loss
-            epoch_loss += loss.item()
+            train_epoch_loss += loss.item()
 
             # accumulate number correct
-            num_correct += torch.sum((pred_batch == label_batch)).item()
-
-        # compute average loss over training epoch
-        train_loss = epoch_loss / i
-
-        # compute accuracy over training epoch
-        train_acc = 100.0 * num_correct / train_set.__len__()
-
-        # reset epoch loss accumulator
-        epoch_loss = 0.0
-
-        # reset epoch number correct accumulator
-        num_correct = 0
+            train_num_correct += torch.sum(
+                (pred_batch == label_batch)
+            ).item()
 
         # run through epoch of test data
         for i, batch in enumerate(test_loader):
@@ -142,20 +132,23 @@ def main():
             loss = F.cross_entropy(logits_batch, label_batch)
 
             # accumulate loss
-            epoch_loss += loss.item()
+            test_epoch_loss += loss.item()
 
             # accumulate number correct
-            num_correct += torch.sum((pred_batch == label_batch)).item()
+            test_num_correct += torch.sum(
+                (pred_batch == label_batch)
+            ).item()
 
-        # compute average loss over training epoch
-        test_loss = epoch_loss / i
+        # compute epoch average loss and accuracy metrics
+        train_loss = train_epoch_loss / i
+        train_acc = 100.0 * train_num_correct / train_set.__len__()
+        test_loss = test_epoch_loss / i
+        test_acc = 100.0 * test_num_correct / test_set.__len__()
 
-        # compute accuracy over training epoch
-        test_acc = 100.0 * num_correct / test_set.__len__()
-
-        print('[INFO]: Epoch {}, Train Loss: {:.2f}, Train Accuracy: {:.2f}, ' \
-            'Test Loss: {:.2f}, Test Accuracy: {:.2f}' \
-            .format(e+1, train_loss, train_acc, test_loss, test_acc))
+        # print epoch metrics
+        template = '[INFO]: Epoch {}, Train Loss: {:.2f}, Train Accuracy: {:.2f}, ' \
+            'Test Loss: {:.2f}, Test Accuracy: {:.2f}'
+        print(template.format(e+1, train_loss, train_acc, test_loss, test_acc))
 
 if __name__ == '__main__':
     main()
