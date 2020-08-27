@@ -2,6 +2,7 @@
 Script to train a CNN or FCNN classifier with PyTorch.
 """
 
+import time
 import argparse
 import torch
 from torchvision.transforms import transforms
@@ -97,6 +98,9 @@ def main():
 
     # train through all epochs
     for e in range(args.num_epochs):
+        # get epoch start time
+        epoch_start = time.time()
+
         # reset accumulators
         train_epoch_loss = 0.0
         train_num_correct = 0
@@ -161,10 +165,14 @@ def main():
         test_loss = test_epoch_loss / i
         test_acc = 100.0 * test_num_correct / test_set.__len__()
 
+        # compute epoch time
+        epoch_time = time.time() - epoch_start
+
         # print epoch metrics
-        template = '[INFO]: Epoch {}, Train Loss: {:.2f}, '\
-            'Train Accuracy: {:.2f}, Test Loss: {:.2f}, Test Accuracy: {:.2f}'
-        print(template.format(e+1, train_loss, train_acc, test_loss, test_acc))
+        template = '[INFO]: Epoch {}, Epoch Time {:.2f}, Train Loss: {:.2f},'\
+            ' Train Accuracy: {:.2f}, Test Loss: {:.2f}, Test Accuracy: {:.2f}'
+        print(template.format(e+1, epoch_time, train_loss,
+            train_acc, test_loss, test_acc))
 
 if __name__ == '__main__':
     main()

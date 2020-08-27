@@ -2,6 +2,7 @@
 Script to train a CNN or FCNN classifier with TensorFlow.
 """
 
+import time
 import argparse
 import tensorflow as tf
 from util.data_helpers import generate_df_from_image_dataset
@@ -121,6 +122,9 @@ def main():
     print('[INFO]: training...')
 
     for e in range(args.num_epochs):
+        # get epoch start time
+        epoch_start = time.time()
+
         # reset metrics at the start of each epoch
         train_loss.reset_states()
         train_acc.reset_states()
@@ -169,11 +173,14 @@ def main():
             # add accuracy to test accuracy accumulator
             test_acc(batch_labels, batch_logits)
 
+        # compute epoch time
+        epoch_time = time.time() - epoch_start
+
         # print epoch metrics
-        template = '[INFO]: Epoch {}, Train Loss: {:.2f}, '\
-            'Train Accuracy: {:.2f}, Test Loss: {:.2f}, Test Accuracy: {:.2f}'
-        print(template.format(e+1, train_loss.result(), 100*train_acc.result(), \
-            test_loss.result(), 100*test_acc.result()))
+        template = '[INFO]: Epoch {}, Epoch Time {:.2f}, Train Loss: {:.2f},'\
+            ' Train Accuracy: {:.2f}, Test Loss: {:.2f}, Test Accuracy: {:.2f}'
+        print(template.format(e+1, epoch_time, train_loss.result(),
+            100*train_acc.result(), test_loss.result(), 100*test_acc.result()))
 
 if __name__ == '__main__':
     main()
