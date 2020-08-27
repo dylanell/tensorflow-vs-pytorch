@@ -14,8 +14,6 @@ def vanilla_image_map(filename, label):
     # read image file
     image_file = tf.io.read_file(filename)
 
-    # TODO do image preprocessing here
-
     # decode image to tensor
     # expand_animations=False is needed to get image with 'shape'
     # reference: https://stackoverflow.com/a/59944421
