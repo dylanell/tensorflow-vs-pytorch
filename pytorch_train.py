@@ -82,23 +82,24 @@ def main():
 
     # train through all epochs
     for e in range(args.num_epochs):
-        # loss accumulator for epoch
+        # reset epoch loss accumulator
         epoch_loss = 0.0
 
-        # get first batch and exit
+        # reset epoch number correct accumulator
+        num_correct = 0
+
+        # run through epoch of train data
         for i, batch in enumerate(train_loader):
             # parse batch and move to training device
             input_batch = batch['image'].to(device)
             label_batch = batch['label'].to(device)
 
-            # compute output batch
+            # compute output batch logits and predictions
             logits_batch = model(input_batch)
+            pred_batch = torch.argmax(logits_batch, dim=1)
 
             # compute cross entropy loss (assumes raw logits as model output)
             loss = F.cross_entropy(logits_batch, label_batch)
-
-            # add loss to loss accumulator
-            epoch_loss += loss.item()
 
             # zero out gradient attributes for all trainabe params
             optimizer.zero_grad()
@@ -109,7 +110,52 @@ def main():
             # update params with current gradients
             optimizer.step()
 
-        print('[INFO]: epoch: {:d}, Loss: {:.2f}'.format(e+1, epoch_loss/i))
+            # accumulate loss
+            epoch_loss += loss.item()
+
+            # accumulate number correct
+            num_correct += torch.sum((pred_batch == label_batch)).item()
+
+        # compute average loss over training epoch
+        train_loss = epoch_loss / i
+
+        # compute accuracy over training epoch
+        train_acc = 100.0 * num_correct / train_set.__len__()
+
+        # reset epoch loss accumulator
+        epoch_loss = 0.0
+
+        # reset epoch number correct accumulator
+        num_correct = 0
+
+        # run through epoch of test data
+        for i, batch in enumerate(test_loader):
+            # parse batch and move to training device
+            input_batch = batch['image'].to(device)
+            label_batch = batch['label'].to(device)
+
+            # compute output batch logits and predictions
+            logits_batch = model(input_batch)
+            pred_batch = torch.argmax(logits_batch, dim=1)
+
+            # compute cross entropy loss (assumes raw logits as model output)
+            loss = F.cross_entropy(logits_batch, label_batch)
+
+            # accumulate loss
+            epoch_loss += loss.item()
+
+            # accumulate number correct
+            num_correct += torch.sum((pred_batch == label_batch)).item()
+
+        # compute average loss over training epoch
+        test_loss = epoch_loss / i
+
+        # compute accuracy over training epoch
+        test_acc = 100.0 * num_correct / test_set.__len__()
+
+        print('[INFO]: Epoch {}, Train Loss: {:.2f}, Train Accuracy: {:.2f}, ' \
+            'Test Loss: {:.2f}, Test Accuracy: {:.2f}' \
+            .format(e+1, train_loss, train_acc, test_loss, test_acc))
 
 if __name__ == '__main__':
     main()
