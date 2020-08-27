@@ -51,7 +51,8 @@ def main():
     parser.add_argument("data_dir", help="Path to data directory.")
     parser.add_argument("--batch_size", type=int, default=32)
     parser.add_argument("--learn_rate", type=float, default=1e-3)
-    parser.add_argument("--num_epochs", type=int, default=5,
+    parser.add_argument(
+        "--num_epochs", type=int, default=5,
         help="Number of epochs to train."
     )
     args = parser.parse_args()
