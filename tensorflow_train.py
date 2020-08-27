@@ -107,7 +107,9 @@ def main():
     )
 
     # create optimizer
-    optimizer = tf.keras.optimizers.Adam()
+    optimizer = tf.keras.optimizers.Adam(
+        learning_rate=args.learn_rate
+    )
 
     # create metrics that accumulate over epoch
     train_loss = tf.keras.metrics.Mean(name='train_loss')
