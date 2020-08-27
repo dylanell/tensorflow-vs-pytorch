@@ -30,3 +30,4 @@ A comparison of TensorFlow vs. PyTorch with classification on MNIST.
 1. Update README to explain format of image dataset.
 2. PyTorch image dataloader class with built in pipeline.
 3. TensorFlow image data iterator class with built in pipeline.
+4. Impute image dimensions.
