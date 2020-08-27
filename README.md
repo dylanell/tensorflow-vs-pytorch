@@ -13,6 +13,8 @@ A comparison of TensorFlow vs. PyTorch with classification on MNIST.
 4. pandas
 5. PIL
 
+### Image Dataset Format:
+
 ### Reference List:
 
 1. PyTorch Datasets
@@ -26,5 +28,5 @@ A comparison of TensorFlow vs. PyTorch with classification on MNIST.
 ### TODO:
 
 1. Update README to explain format of image dataset.
-2. Refactor PyTorch dataset class to provide a PyTorch dataloader.
-3. Refactor TensorFlow dataset class to provide a TensorFlow iterator
+2. PyTorch image dataloader class with built in pipeline.
+3. TensorFlow image data iterator class with built in pipeline.
