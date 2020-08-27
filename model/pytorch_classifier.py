@@ -11,13 +11,13 @@ class Classifier(torch.nn.Module):
     """
 
     # initialize and define all layers
-    def __init__(self, in_channels, out_dimension):
+    def __init__(self, image_dims, out_dim):
         # run base class initializer
         super(Classifier, self).__init__()
 
         # define convolution layers
         self.conv_1 = torch.nn.Conv2d(
-            in_channels, 32, 3, stride=1, padding=1
+            image_dims[-1], 32, 3, stride=1, padding=1
         )
         self.conv_2 = torch.nn.Conv2d(
             32, 64, 3, stride=2, padding=1
@@ -30,7 +30,7 @@ class Classifier(torch.nn.Module):
         )
 
         # define fully connected layers
-        self.fc_1 = torch.nn.Linear(256 * 4 * 4, out_dimension)
+        self.fc_1 = torch.nn.Linear(256 * 4 * 4, out_dim)
 
     # compute forward propagation of input x
     def forward(self, x):

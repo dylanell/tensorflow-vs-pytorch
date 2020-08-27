@@ -16,12 +16,18 @@ def main():
     parser.add_argument("data_dir", help="Path to data directory.")
     parser.add_argument("--batch_size", type=int, default=32)
     parser.add_argument("--learn_rate", type=float, default=1e-3)
-    parser.add_argument("--num_workers", type=int, default=1, help="Number of dataloader threads.")
-    parser.add_argument("--num_epochs", type=int, default=5, help="Number of epochs to train.")
+    parser.add_argument("--num_workers", type=int, default=1,
+        help="Number of dataloader threads."
+    )
+    parser.add_argument("--num_epochs", type=int, default=5,
+        help="Number of epochs to train."
+    )
     args = parser.parse_args()
 
     # training device - try to find a gpu, if not just use cpu
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    device = torch.device(
+        'cuda:0' if torch.cuda.is_available() else 'cpu'
+    )
 
     print('[INFO]: using \'{}\' device'.format(device))
 
@@ -31,10 +37,16 @@ def main():
     # get number of classes in labels
     num_class = data_dict['train']['Label'].nunique()
 
-    # define the transform chain to process each sample as it is passed to a batch
+    # image dimensions
+    # TODO: automatically compute this
+    image_dims = [32, 32, 1]
+
+    # define the transform chain to process each sample
+    # as it is passed to a batch
     #   1. resize the sample (image) to 32x32 (h, w)
     #   2. convert resized sample to Pytorch tensor
-    #   3. normalize sample values (pixel values) using mean 0.5 and stdev 0,5; [0, 255] -> [0, 1]
+    #   3. normalize sample values (pixel values) using
+    #      mean 0.5 and stdev 0,5; [0, 255] -> [0, 1]
     transform = transforms.Compose([
         transforms.Resize((32, 32)),
         transforms.ToTensor(),
@@ -70,10 +82,13 @@ def main():
     )
 
     # initialize the model
-    model = Classifier(1, num_class)
+    model = Classifier(image_dims, num_class)
 
     # initialize an optimizer
-    optimizer = torch.optim.Adam(model.parameters(), lr=args.learn_rate)
+    optimizer = torch.optim.Adam(
+        model.parameters(),
+        lr=args.learn_rate
+    )
 
     # move the model to the training device
     model.to(device)
@@ -104,7 +119,8 @@ def main():
             # zero out gradient attributes for all trainabe params
             optimizer.zero_grad()
 
-            # compute gradients w.r.t loss (repopulate gradient attribute for all trainable params)
+            # compute gradients w.r.t loss (repopulate gradient attribute
+            # for all trainable params)
             loss.backward()
 
             # update params with current gradients
@@ -146,8 +162,8 @@ def main():
         test_acc = 100.0 * test_num_correct / test_set.__len__()
 
         # print epoch metrics
-        template = '[INFO]: Epoch {}, Train Loss: {:.2f}, Train Accuracy: {:.2f}, ' \
-            'Test Loss: {:.2f}, Test Accuracy: {:.2f}'
+        template = '[INFO]: Epoch {}, Train Loss: {:.2f}, '\
+            'Train Accuracy: {:.2f}, Test Loss: {:.2f}, Test Accuracy: {:.2f}'
         print(template.format(e+1, train_loss, train_acc, test_loss, test_acc))
 
 if __name__ == '__main__':
