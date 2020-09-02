@@ -6,7 +6,7 @@ import tensorflow as tf
 
 class Classifier(tf.keras.Model):
     """
-    TODO: Description.
+    
     """
 
     # initialize and define all layers
@@ -17,17 +17,13 @@ class Classifier(tf.keras.Model):
         # define convolution layers
         self.conv_1 = tf.keras.layers.Conv2D(
             32, 3, strides=1, activation='relu', padding='same',
-            input_shape=tuple(image_dims)
-        )
+            input_shape=tuple(image_dims))
         self.conv_2 = tf.keras.layers.Conv2D(
-            64, 3, strides=2, activation='relu', padding='same'
-        )
+            64, 3, strides=2, activation='relu', padding='same')
         self.conv_3 = tf.keras.layers.Conv2D(
-            128, 3, strides=2, activation='relu', padding='same'
-        )
+            128, 3, strides=2, activation='relu', padding='same')
         self.conv_4 = tf.keras.layers.Conv2D(
-            256, 3, strides=2, activation='relu', padding='same'
-        )
+            256, 3, strides=2, activation='relu', padding='same')
 
         # define flattening layers
         self.flat_1 = tf.keras.layers.Flatten()
