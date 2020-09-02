@@ -1,5 +1,5 @@
 """
-Various functions to help with processing data.
+Various Python functions for processing data.
 """
 
 import pandas as pd
