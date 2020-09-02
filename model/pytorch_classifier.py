@@ -7,7 +7,7 @@ import torch.nn.functional as F
 
 class Classifier(torch.nn.Module):
     """
-    TODO: Description.
+
     """
 
     # initialize and define all layers
@@ -17,17 +17,13 @@ class Classifier(torch.nn.Module):
 
         # define convolution layers
         self.conv_1 = torch.nn.Conv2d(
-            image_dims[-1], 32, 3, stride=1, padding=1
-        )
+            image_dims[-1], 32, 3, stride=1, padding=1)
         self.conv_2 = torch.nn.Conv2d(
-            32, 64, 3, stride=2, padding=1
-        )
+            32, 64, 3, stride=2, padding=1)
         self.conv_3 = torch.nn.Conv2d(
-            64, 128, 3, stride=2, padding=1
-        )
+            64, 128, 3, stride=2, padding=1)
         self.conv_4 = torch.nn.Conv2d(
-            128, 256, 3, stride=2, padding=1
-        )
+            128, 256, 3, stride=2, padding=1)
 
         # define fully connected layers
         self.fc_1 = torch.nn.Linear(256 * 4 * 4, out_dim)
