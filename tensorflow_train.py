@@ -5,45 +5,12 @@ Script to train a CNN or FCNN classifier with TensorFlow.
 import time
 import argparse
 import tensorflow as tf
+
 from util.data_helpers import generate_df_from_image_dataset
+from util.tensorflow_helpers import ImageDatasetBuilderVanilla
 from model.tensorflow_classifier import Classifier
 
 AUTOTUNE = tf.data.experimental.AUTOTUNE
-
-def vanilla_image_map(filename, label):
-    # read image file
-    image_file = tf.io.read_file(filename)
-
-    # decode image to tensor
-    # expand_animations=False is needed to get image with 'shape'
-    # reference: https://stackoverflow.com/a/59944421
-    image = tf.io.decode_image(image_file, expand_animations=False)
-
-    # convert image dtype tp float32
-    image = tf.image.convert_image_dtype(image, tf.float32)
-
-    # resize image (32 can be global attribute when using this in a class)
-    image = tf.image.resize(image, [32, 32])
-
-    # standardize image to (mean=0, stdev=1)
-    image = tf.image.per_image_standardization(image)
-
-    return image, label
-
-def configure_dataset(dataset, batch_size):
-    # set dataset to cache files for more efficient retrieval
-    dataset = dataset.cache()
-
-    # set dataset to randomly shuffle order
-    dataset = dataset.shuffle(buffer_size=1000)
-
-    # set dataset to return batches of multiple elements
-    dataset = dataset.batch(batch_size)
-
-    # set dataset to prefetch elements for better feed performance
-    dataset = dataset.prefetch(buffer_size=AUTOTUNE)
-
-    return dataset
 
 def main():
     # parse command line arguments
@@ -52,8 +19,7 @@ def main():
     parser.add_argument("--batch_size", type=int, default=32)
     parser.add_argument("--learn_rate", type=float, default=1e-3)
     parser.add_argument(
-        "--num_epochs", type=int, default=5,
-        help="Number of epochs to train."
+        "--num_epochs", type=int, default=5, help="Number of epochs to train."
     )
     args = parser.parse_args()
 
@@ -64,38 +30,17 @@ def main():
     num_class = data_dict['train']['Label'].nunique()
 
     # image dimensions
-    # TODO: automatically compute this
-    image_dims = [32, 32, 1]
+    image_dims = (32, 32, 1)
 
-    # create train set from (file, label) tensor slices
-    train_ds = tf.data.Dataset.from_tensor_slices((
-        data_dict['train']['Filename'].tolist(),
-        data_dict['train']['Label'].tolist()
-    ))
-
-    # map train set to process images and labels
-    train_ds = train_ds.map(
-        vanilla_image_map,
-        num_parallel_calls=AUTOTUNE
+    # initialize the dataste builder
+    dataset_builder = ImageDatasetBuilderVanilla(
+        image_size=image_dims[:-1],
+        batch_size=args.batch_size
     )
 
-    # configure train set for performance
-    train_ds = configure_dataset(train_ds, args.batch_size)
-
-    # create test set from (file, label) tensor slices
-    test_ds = tf.data.Dataset.from_tensor_slices((
-        data_dict['test']['Filename'].tolist(),
-        data_dict['test']['Label'].tolist()
-    ))
-
-    # map test set to process images and labels
-    test_ds = test_ds.map(
-        vanilla_image_map,
-        num_parallel_calls=AUTOTUNE
-    )
-
-    # configure train set for performance
-    test_ds = configure_dataset(test_ds, args.batch_size)
+    # create training/testing datasets
+    train_ds = dataset_builder.build(data_dict['train'])
+    test_ds = dataset_builder.build(data_dict['test'])
 
     # initialize model
     model = Classifier(image_dims, num_class)
