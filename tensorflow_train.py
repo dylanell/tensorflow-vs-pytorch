@@ -23,6 +23,9 @@ def main():
     )
     args = parser.parse_args()
 
+    gpus = tf.config.experimental.list_physical_devices('GPU')
+    print('[INFO]: found {} GPUs:'.format(len(gpus)))
+
     # generate filenames/labels df from image data directory
     data_dict = generate_df_from_image_dataset(args.data_dir)
 
