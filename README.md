@@ -15,7 +15,7 @@ A comparison of TensorFlow vs. PyTorch with classification on MNIST.
 
 ### Image Dataset Format:
 
-### Reference List:
+### References:
 
 1. PyTorch Datasets
   * https://pytorch.org/tutorials/beginner/data_loading_tutorial.html
@@ -24,11 +24,10 @@ A comparison of TensorFlow vs. PyTorch with classification on MNIST.
 3. TensorFlow Datasets:
   * https://www.tensorflow.org/api_docs/python/tf/data/Dataset
   * https://www.tensorflow.org/tutorials/load_data/images#using_tfdata_for_finer_control
+4. TensorFlow GPU Support:
+  * https://towardsdatascience.com/installing-tensorflow-gpu-in-ubuntu-20-04-4ee3ca4cb75d
 
 ### TODO:
 
 1. Update README to explain format of image dataset.
-2. PyTorch image dataloader class with built in pipeline.
-3. TensorFlow image data iterator class with built in pipeline.
-4. Impute image dimensions.
-5. Get TensorFlow to use gpu.
+2. Get TensorFlow to use gpu.
