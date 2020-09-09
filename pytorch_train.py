@@ -1,5 +1,5 @@
 """
-Script to train a CNN or FCNN classifier with PyTorch.
+Script to train a CNN classifier with PyTorch.
 """
 
 import time

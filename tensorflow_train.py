@@ -1,5 +1,5 @@
 """
-Script to train a CNN or FCNN classifier with TensorFlow.
+Script to train a CNN classifier with TensorFlow.
 """
 
 import time
