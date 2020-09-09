@@ -115,7 +115,6 @@ def main():
             # compute loss
             batch_loss = loss_object(batch_labels, batch_logits)
 
-
             # add loss to test loss accumulator object
             test_loss(batch_loss)
 
