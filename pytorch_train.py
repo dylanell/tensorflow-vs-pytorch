@@ -58,6 +58,9 @@ def main():
     # initialize the model
     model = Classifier(image_dims, num_class)
 
+    # define cross entropy loss (requires logits as outputs)
+    loss_fn = torch.nn.CrossEntropyLoss()
+
     # initialize an optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learn_rate)
 
@@ -87,8 +90,8 @@ def main():
             logits_batch = model(input_batch)
             pred_batch = torch.argmax(logits_batch, dim=1)
 
-            # compute cross entropy loss (assumes raw logits as model output)
-            loss = F.cross_entropy(logits_batch, label_batch)
+            # compute loss
+            loss = loss_fn(logits_batch, label_batch)
 
             # zero out gradient attributes for all trainabe params
             optimizer.zero_grad()
@@ -118,8 +121,8 @@ def main():
             logits_batch = model(input_batch)
             pred_batch = torch.argmax(logits_batch, dim=1)
 
-            # compute cross entropy loss (assumes raw logits as model output)
-            loss = F.cross_entropy(logits_batch, label_batch)
+            # compute loss
+            loss = loss_fn(logits_batch, label_batch)
 
             # accumulate loss
             test_epoch_loss += loss.item()
