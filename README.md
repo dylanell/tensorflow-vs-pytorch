@@ -40,7 +40,21 @@ train_image_02.png, 7
 ...
 ```
 
-If you would like to re-use the code here to work with other image datasets, just format any new image datasets to follow the outline above.
+If you would like to re-use the code here to work with other image datasets, just format any new image dataset to follow the outline above.
+
+### Training
+
+Train the TensorFlow classifier by running:
+
+```
+$ python tensorflow_train.py </path/to/dataset/directory>
+```
+
+Train the PyTorch classifier by running:
+
+```
+$ python pytorch_train.py </path/to/dataset/directory>
+```
 
 ### References:
 
