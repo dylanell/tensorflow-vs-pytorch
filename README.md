@@ -15,19 +15,41 @@ A comparison of TensorFlow vs. PyTorch with classification on MNIST.
 
 ### Image Dataset Format:
 
+The MNIST dataset consists of images of written numbers (0-9) with corresponding labels. The dataset can be accessed a number of ways using Python packages (`numpy`, `torchvision`, etc.), or it can be downloaded directly from the [MNIST homepage](http://yann.lecun.com/exdb/mnist/). In order to demonstrate an image-based data pipeline in a standard way and demonstrate how to use memory-efficient dataloaders in both TensorFlow and Pytorch, we organize the MNIST dataset into training/testing directories of raw image files (`png` or `jpg`) accompanied by a `csv` file listing one-to-one correspondences between the image file names and their label. In general, this "generic image dataset format" is summarized by the directory tree structure below.
+
+```
+dataset_directory/
+|__ train_labels.csv
+|__ test_labels.csv
+|__ train/
+|   |__ train_image_01.png
+|   |__ train_image_02.png
+|   |__ ...
+|__ test/
+|   |__ test_image_01.png
+|   |__ test_image_02.png
+|   |__ ...   
+```
+
+Each labels `csv` file has the format:
+
+```
+Filename, Label
+train_image_01.png, 4
+train_image_02.png, 7
+...
+```
+
+If you would like to re-use the code here to work with other image datasets, just format any new image datasets to follow the outline above.
+
 ### References:
 
-1. PyTorch Datasets
+1. PyTorch Dataset Pipelines
   * https://pytorch.org/tutorials/beginner/data_loading_tutorial.html
 2. TensoFlow Training
   * https://www.tensorflow.org/tutorials/quickstart/advanced
-3. TensorFlow Datasets:
+3. TensorFlow Dataset Pipelines:
   * https://www.tensorflow.org/api_docs/python/tf/data/Dataset
   * https://www.tensorflow.org/tutorials/load_data/images#using_tfdata_for_finer_control
 4. TensorFlow GPU Support:
   * https://towardsdatascience.com/installing-tensorflow-gpu-in-ubuntu-20-04-4ee3ca4cb75d
-
-### TODO:
-
-1. Update README to explain format of image dataset.
-2. Get TensorFlow to use gpu.
