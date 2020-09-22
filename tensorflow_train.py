@@ -3,7 +3,7 @@ Script to train a CNN classifier with TensorFlow.
 """
 
 import time
-import argparse
+import yaml
 import tensorflow as tf
 
 from util.data_helpers import generate_df_from_image_dataset
@@ -13,32 +13,25 @@ from model.tensorflow_classifier import Classifier
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
 def main():
-    # parse command line arguments
-    parser = argparse.ArgumentParser()
-    parser.add_argument("data_dir", help="Path to data directory.")
-    parser.add_argument("--batch_size", type=int, default=32)
-    parser.add_argument("--learn_rate", type=float, default=1e-3)
-    parser.add_argument(
-        "--num_epochs", type=int, default=5, help="Number of epochs to train."
-    )
-    args = parser.parse_args()
+    # parse configuration file
+    with open('config.yaml', 'r') as fp:
+        config = yaml.load(fp, Loader=yaml.FullLoader)
 
     gpus = tf.config.experimental.list_physical_devices('GPU')
     print('[INFO]: found {} GPUs:'.format(len(gpus)))
 
     # generate filenames/labels df from image data directory
-    data_dict = generate_df_from_image_dataset(args.data_dir)
+    data_dict = generate_df_from_image_dataset(
+        config['dataset_directory']
+    )
 
     # get number of classes in labels
     num_class = data_dict['train']['Label'].nunique()
 
-    # image dimensions
-    image_dims = (32, 32, 1)
-
     # initialize the dataste builder
     dataset_builder = ImageDatasetBuilderVanilla(
-        image_size=image_dims[:-1],
-        batch_size=args.batch_size
+        image_size=config['input_dimensions'][:-1],
+        batch_size=config['batch_size']
     )
 
     # create training/testing datasets
@@ -46,7 +39,7 @@ def main():
     test_ds = dataset_builder.build(data_dict['test'])
 
     # initialize model
-    model = Classifier(image_dims, num_class)
+    model = Classifier(config['input_dimensions'], num_class)
 
     # create loss object
     loss_object = tf.keras.losses.SparseCategoricalCrossentropy(
@@ -55,7 +48,7 @@ def main():
 
     # create optimizer
     optimizer = tf.keras.optimizers.Adam(
-        learning_rate=args.learn_rate
+        learning_rate=config['learning_rate']
     )
 
     # create metrics that accumulate over epoch
@@ -70,7 +63,7 @@ def main():
 
     print('[INFO]: training...')
 
-    for e in range(args.num_epochs):
+    for e in range(config['number_epochs']):
         # get epoch start time
         epoch_start = time.time()
 

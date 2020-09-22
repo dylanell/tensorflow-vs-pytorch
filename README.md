@@ -44,10 +44,12 @@ If you would like to re-use the code here to work with other image datasets, jus
 
 ### Training
 
+Training hyperparameters are pulled from the `config.yaml` configuration file and can be changed by editing the file. 
+
 Train the TensorFlow classifier by running:
 
 ```
-$ python tensorflow_train.py </path/to/dataset/directory>
+$ python tensorflow_train.py
 ```
 
 Train the PyTorch classifier by running:

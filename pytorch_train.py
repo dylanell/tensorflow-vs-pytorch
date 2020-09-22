@@ -3,7 +3,7 @@ Script to train a CNN classifier with PyTorch.
 """
 
 import time
-import argparse
+import yaml
 import torch
 from torchvision.transforms import transforms
 import torch.nn.functional as F
@@ -13,17 +13,9 @@ from util.data_helpers import generate_df_from_image_dataset
 from model.pytorch_classifier import Classifier
 
 def main():
-    # parse command line arguments
-    parser = argparse.ArgumentParser()
-    parser.add_argument("data_dir", help="Path to data directory.")
-    parser.add_argument("--batch_size", type=int, default=32)
-    parser.add_argument("--learn_rate", type=float, default=1e-3)
-    parser.add_argument(
-        "--num_workers", type=int, default=1,
-        help="Number of dataloader threads.")
-    parser.add_argument(
-        "--num_epochs", type=int, default=5, help="Number of epochs to train.")
-    args = parser.parse_args()
+    # parse configuration file
+    with open('config.yaml', 'r') as fp:
+        config = yaml.load(fp, Loader=yaml.FullLoader)
 
     # training device - try to find a gpu, if not just use cpu
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
@@ -31,38 +23,38 @@ def main():
     print('[INFO]: using \'{}\' device'.format(device))
 
     # generate filenames/labels df from image data directory
-    data_dict = generate_df_from_image_dataset(args.data_dir)
+    data_dict = generate_df_from_image_dataset(config['dataset_directory'])
 
     # get number of classes in labels
     num_class = data_dict['train']['Label'].nunique()
 
-    # image dimensions
-    image_dims = (32, 32, 1)
-
     # build training dataloader
     train_set, train_loader = build_image_dataset(
         data_dict['train'],
-        image_size=image_dims[:-1],
-        batch_size=args.batch_size,
-        num_workers=args.num_workers
+        image_size=config['input_dimensions'][:-1],
+        batch_size=config['batch_size'],
+        num_workers=config['number_workers']
     )
 
     # build testing dataloader
     test_set, test_loader = build_image_dataset(
         data_dict['test'],
-        image_size=image_dims[:-1],
-        batch_size=args.batch_size,
-        num_workers=args.num_workers
+        image_size=config['input_dimensions'][:-1],
+        batch_size=config['batch_size'],
+        num_workers=config['number_workers']
     )
 
     # initialize the model
-    model = Classifier(image_dims, num_class)
+    model = Classifier(config['input_dimensions'], num_class)
 
     # define cross entropy loss (requires logits as outputs)
     loss_fn = torch.nn.CrossEntropyLoss()
 
     # initialize an optimizer
-    optimizer = torch.optim.Adam(model.parameters(), lr=args.learn_rate)
+    optimizer = torch.optim.Adam(
+        model.parameters(),
+        lr=config['learning_rate']
+    )
 
     # move the model to the training device
     model.to(device)
@@ -70,7 +62,7 @@ def main():
     print('[INFO]: training...')
 
     # train through all epochs
-    for e in range(args.num_epochs):
+    for e in range(config['number_epochs']):
         # get epoch start time
         epoch_start = time.time()
 
