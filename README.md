@@ -15,6 +15,8 @@ A comparison of TensorFlow vs. PyTorch with classification on MNIST.
 
 ### Image Dataset Format:
 
+This project assumes you have the MNIST dataset pre-configured locally on your machine in the format described below. My [dataset-helpers]() Github project also contains a Python script that performs this local configuration automatically.
+
 The MNIST dataset consists of images of written numbers (0-9) with corresponding labels. The dataset can be accessed a number of ways using Python packages (`mnist`, `torchvision`, `tensorflow_datasets`, etc.), or it can be downloaded directly from the [MNIST homepage](http://yann.lecun.com/exdb/mnist/). In order to demonstrate an image-based data pipeline in a standard way and demonstrate how to use memory-efficient dataloaders in both TensorFlow and Pytorch, we organize the MNIST dataset into training/testing directories of raw image files (`png` or `jpg`) accompanied by a `csv` file listing one-to-one correspondences between the image file names and their label. In general, this "generic image dataset format" is summarized by the directory tree structure below.
 
 ```
@@ -40,11 +42,11 @@ train_image_02.png, 7
 ...
 ```
 
-If you would like to re-use the code here to work with other image datasets, just format any new image dataset to follow the outline above.
+If you would like to re-use the code here to work with other image datasets, just format any new image dataset to follow the outline above and be sure to edit corresponding hyperparameters in the `config.yaml` file.
 
 ### Training
 
-Training hyperparameters are pulled from the `config.yaml` configuration file and can be changed by editing the file.
+Training hyperparameters are pulled from the `config.yaml` configuration file and can be changed by editing the file contents.
 
 Train the TensorFlow classifier by running:
 
