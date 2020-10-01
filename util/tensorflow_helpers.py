@@ -32,9 +32,6 @@ class ImageDatasetBuilderVanilla():
             num_parallel_calls=AUTOTUNE
         )
 
-        # set dataset to cache files for more efficient retrieval
-        dataset = dataset.cache()
-
         # set dataset to randomly shuffle order
         dataset = dataset.shuffle(buffer_size=1000)
 
