@@ -44,7 +44,7 @@ If you would like to re-use the code here to work with other image datasets, jus
 
 ### Training
 
-Training hyperparameters are pulled from the `config.yaml` configuration file and can be changed by editing the file. 
+Training hyperparameters are pulled from the `config.yaml` configuration file and can be changed by editing the file.
 
 Train the TensorFlow classifier by running:
 
@@ -60,9 +60,9 @@ $ python pytorch_train.py </path/to/dataset/directory>
 
 ### References:
 
-1. PyTorch Dataset Pipelines
+1. PyTorch Dataset Pipelines:
   * https://pytorch.org/tutorials/beginner/data_loading_tutorial.html
-2. TensoFlow Training
+2. TensorFlow Training:
   * https://www.tensorflow.org/tutorials/quickstart/advanced
 3. TensorFlow Dataset Pipelines:
   * https://www.tensorflow.org/api_docs/python/tf/data/Dataset
