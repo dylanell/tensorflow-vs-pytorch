@@ -5,10 +5,6 @@ CNN classifier implemented in TensorFlow.
 import tensorflow as tf
 
 class Classifier(tf.keras.Model):
-    """
-    
-    """
-
     # initialize and define all layers
     def __init__(self, image_dims, out_dim):
         # run base class initializer
