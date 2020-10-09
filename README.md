@@ -57,7 +57,7 @@ $ python tensorflow_train.py
 Train the PyTorch classifier by running:
 
 ```
-$ python pytorch_train.py </path/to/dataset/directory>
+$ python pytorch_train.py
 ```
 
 ### References:
