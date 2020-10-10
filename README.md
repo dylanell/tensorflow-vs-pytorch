@@ -7,11 +7,12 @@ A comparison of TensorFlow vs. PyTorch with classification on MNIST.
 
 ### Python Packages:
 
-- torch
+- pytorch
 - torchvision
 - tensorflow
 - pandas
 - PIL
+- pyyaml
 
 ### Image Dataset Format:
 
