@@ -118,7 +118,7 @@ def main():
         epoch_time = time.time() - epoch_start
 
         # print epoch metrics
-        template = '[INFO]: Epoch {}, Epoch Time {:.2f}, Train Loss: {:.2f},'\
+        template = '[INFO]: Epoch {}, Epoch Time {:.2f}s, Train Loss: {:.2f},'\
             ' Train Accuracy: {:.2f}, Test Loss: {:.2f}, Test Accuracy: {:.2f}'
         print(template.format(e+1, epoch_time, train_loss.result(),
             100*train_acc.result(), test_loss.result(), 100*test_acc.result()))
