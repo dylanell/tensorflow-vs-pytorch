@@ -7,6 +7,7 @@ import tensorflow as tf
 # for autotuning multi-threading/parallelization parameters
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
+
 class ImageDatasetBuilderVanilla():
     """
     Given a dataframe of the form [img_paths, labels], construct a TensorFlow

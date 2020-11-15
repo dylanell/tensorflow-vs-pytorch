@@ -4,6 +4,7 @@ Various Python functions for processing data.
 
 import pandas as pd
 
+
 def generate_df_from_image_dataset(path):
     # read train/test label files to dataframe
     train_df = pd.read_csv('{}train_labels.csv'.format(path))

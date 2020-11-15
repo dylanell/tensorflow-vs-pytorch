@@ -7,6 +7,7 @@ from torchvision.transforms import transforms
 
 from util.pytorch_dataset import ImageDataset
 
+
 # Given a dataframe of the form [img_paths, labels], construct a TensorFlow
 # dataset object and perform all of the standard image dataset processing
 # functions (resizing, standardization, etc.).

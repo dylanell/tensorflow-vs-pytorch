@@ -5,12 +5,11 @@ Script to train a CNN classifier with PyTorch.
 import time
 import yaml
 import torch
-from torchvision.transforms import transforms
-import torch.nn.functional as F
 
 from util.pytorch_helpers import build_image_dataset
 from util.data_helpers import generate_df_from_image_dataset
 from model.pytorch_classifier import Classifier
+
 
 def main():
     # parse configuration file
@@ -85,7 +84,7 @@ def main():
             # compute loss
             loss = loss_fn(logits_batch, label_batch)
 
-            # zero out gradient attributes for all trainabe params
+            # zero out gradient attributes for all trainable params
             optimizer.zero_grad()
 
             # compute gradients w.r.t loss (repopulate gradient attribute
@@ -100,8 +99,11 @@ def main():
 
             # accumulate number correct
             train_num_correct += torch.sum(
-                (pred_batch == label_batch)
-            ).item()
+                torch.tensor(pred_batch == label_batch)).item()
+
+        # compute epoch metrics
+        train_loss = train_epoch_loss / i
+        train_acc = 100.0 * train_num_correct / train_set.__len__()
 
         # run through epoch of test data
         for i, batch in enumerate(test_loader):
@@ -121,12 +123,9 @@ def main():
 
             # accumulate number correct
             test_num_correct += torch.sum(
-                (pred_batch == label_batch)
-            ).item()
+                torch.tensor(pred_batch == label_batch)).item()
 
-        # compute epoch average loss and accuracy metrics
-        train_loss = train_epoch_loss / i
-        train_acc = 100.0 * train_num_correct / train_set.__len__()
+        # compute epoch metrics
         test_loss = test_epoch_loss / i
         test_acc = 100.0 * test_num_correct / test_set.__len__()
 
@@ -134,10 +133,12 @@ def main():
         epoch_time = time.time() - epoch_start
 
         # print epoch metrics
-        template = '[INFO]: Epoch {}, Epoch Time {:.2f}s, Train Loss: {:.2f},'\
-            ' Train Accuracy: {:.2f}, Test Loss: {:.2f}, Test Accuracy: {:.2f}'
-        print(template.format(e+1, epoch_time, train_loss,
-            train_acc, test_loss, test_acc))
+        template = '[INFO]: Epoch {}, Epoch Time {:.2f}s, Train Loss: ' \
+                   '{:.2f}, Train Accuracy: {:.2f}, Test Loss: {:.2f}, ' \
+                   'Test Accuracy: {:.2f}'
+        print(template.format(
+            e + 1, epoch_time, train_loss, train_acc, test_loss, test_acc))
+
 
 if __name__ == '__main__':
     main()

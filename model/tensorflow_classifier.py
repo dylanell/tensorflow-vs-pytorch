@@ -28,7 +28,7 @@ class Classifier(tf.keras.Model):
         self.fc_1 = tf.keras.layers.Dense(out_dim)
 
     # compute forward propagation of input x
-    def call(self, x):
+    def call(self, x, **kwargs):
         z_1 = self.conv_1(x)
         z_2 = self.conv_2(z_1)
         z_3 = self.conv_3(z_2)

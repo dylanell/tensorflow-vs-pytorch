@@ -5,6 +5,7 @@ CNN classifier implemented in PyTorch.
 import torch
 import torch.nn.functional as F
 
+
 class Classifier(torch.nn.Module):
     # initialize and define all layers
     def __init__(self, image_dims, out_dim):

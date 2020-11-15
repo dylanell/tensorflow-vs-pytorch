@@ -12,6 +12,7 @@ from model.tensorflow_classifier import Classifier
 
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
+
 def main():
     # parse configuration file
     with open('config.yaml', 'r') as fp:
@@ -28,7 +29,7 @@ def main():
     # get number of classes in labels
     num_class = data_dict['train']['Label'].nunique()
 
-    # initialize the dataste builder
+    # initialize the dataset builder
     dataset_builder = ImageDatasetBuilderVanilla(
         image_size=config['input_dimensions'][:-1],
         batch_size=config['batch_size']
@@ -118,10 +119,13 @@ def main():
         epoch_time = time.time() - epoch_start
 
         # print epoch metrics
-        template = '[INFO]: Epoch {}, Epoch Time {:.2f}s, Train Loss: {:.2f},'\
-            ' Train Accuracy: {:.2f}, Test Loss: {:.2f}, Test Accuracy: {:.2f}'
-        print(template.format(e+1, epoch_time, train_loss.result(),
-            100*train_acc.result(), test_loss.result(), 100*test_acc.result()))
+        template = '[INFO]: Epoch {}, Epoch Time {:.2f}s, Train Loss: ' \
+                   '{:.2f}, Train Accuracy: {:.2f}, Test Loss: {:.2f}, ' \
+                   'Test Accuracy: {:.2f}'
+        print(template.format(e + 1, epoch_time, train_loss.result(),
+                              100 * train_acc.result(), test_loss.result(),
+                              100 * test_acc.result()))
+
 
 if __name__ == '__main__':
     main()
